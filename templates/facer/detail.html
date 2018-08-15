@@ -1,0 +1,126 @@
+{% extends "facer/base.html" %}
+
+{% block title%}{{ machine.ip_address }}{% endblock %}
+
+{% block css_load %}
+{% load static %}
+    <script type="text/javascript" src="{% static 'fusioncharts/fusioncharts.js' %}"></script>
+    <script type="text/javascript" src="{% static 'fusioncharts/themes/fusioncharts.theme.fint.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'facer/style.css' %}" />
+{% endblock %}
+
+{% block hosts_menu %}
+    {% for machine in machine_list %}
+        <li><a href="{% url 'facer:detail' machine.id %}">{{ machine.ip_address }}</a></li>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+{% if main_response %}
+<div class="container detail-container">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="col-sm-12">
+                <button class="btn btn-default btn-log" data-toggle="collapse" data-target="#hide-me">Log</button>
+                <div id="hide-me" class="collapse">            
+       	            <h4>
+  	                Log:
+		        {{ main_response | safe }}
+	            </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+    <div class="container detail-container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="col-sm-6">
+                    <h1>{{this_machine.ip_address}} - {{this_machine.description}}</h1>
+                </div>
+                <div class="col-sm-6">
+                    <div class=" login-form del-form">
+                        <form action="{% url 'facer:machine_del' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="id" value="{{ this_machine.id }}">
+                            <input type="submit" name="submit" value="Удалить хост"
+                                   onclick="return confirm('Вы точно хотите удалить хост?')">
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="col-sm-4">
+                    <a href="{% url 'facer:interface_add' this_machine.id %}" class="btn btn-default btn-top">Интерфейсы</a>
+                </div>
+                <div class="col-sm-4">
+                    <a href="{% url 'facer:route_map_add' this_machine.id %}" class="btn btn-default btn-top">Route-map'ы</a>
+                </div>
+                <div class="col-sm-4">
+                    <a href="{% url 'facer:settings_set' this_machine.id %}" class="btn btn-default btn-top">Настройки</a>
+                </div>
+            </div>
+            {% for int, values in data.items %}
+                <div class="col-sm-12">
+                    <div class="col-sm-9 chart" id={{ int }}></div>
+                    {{ values.chart|safe }}
+                    <div class="col-sm-3">
+                      <form action="{% url 'facer:detail' this_machine.id %}" method="post">
+                        <div class="col-sm-12 route-maps">
+                          <h4>Route-Map:
+                          {% csrf_token %}
+                          <select name="route_map_id">
+                            <option disabled>Выберите Route-Map</option>
+                            {% for RM in all_route_maps %}
+                              <option value="{{ RM.id }}"
+                              {% if RM.id == values.route_map.id %} selected {% endif %}
+                              >{{ RM.name }}</option>
+                            {% endfor %}
+                            <option value="NULL" {% if not values.route_map.id %} selected {% endif %}>No route-map</option>
+                          </select>
+                          </h4>
+                           <h4>Black Hole community:</h4>
+                            <input type="text" name="community" value="{{ values.route_map.community }}"
+                                   placeholder="65535:00666"
+                                   pattern="((^|:)((6553[0-5])|(655[0-2]\d)|(65[0-4]\d\d)|(6[0-4]\d\d\d)|([0-5]\d\d\d\d)|([0-9]{0,3}\d))){2}$">
+                          <input type="hidden" name="interface_id" value="{{ values.id }}">
+                            <input type="submit" name="change" value="Сменить">
+                        </form>
+                        <hr>
+                        </div>
+                        <form action="{% url 'facer:detail' this_machine.id %}" method="post">
+                            {% csrf_token %}
+                            <div class="col-sm-6 route-maps">
+                                <h3>Prefix</h3>
+                            </div>
+                            <div class="col-sm-6 route-maps">
+                                <h3>Prepend</h3>
+                            </div>
+                            {% for data_type, data_data in values.prefix_lists.items %}
+                            <div class="col-sm-6">
+                                <input type="hidden" name="rm_to_pl_id[]" value="{{ data_data.id }}">
+                                <label>{{ data_data.net }}</label>
+                            </div>
+                            <div class="col-sm-6 prefix-list">
+                                <input type="number" name="rm_to_pl_prepend[]" value="{{ data_data.prepend }}" min="-1"
+                                max="{{ data_data.max_prepend }}">
+                            </div>
+                            {% endfor %}
+                            <div class="col-sm-12">
+                                <input type="hidden" name="interface_id" value="{{ values.id }}">
+                                <input type="hidden" name="route_map_id" value="{{ values.route_map.id }}">
+                                <input type="submit" name="update" value="Обновить" {% if not values.route_map.id %}
+                                disabled {% endif %} class="btn-pl">
+                            </div>
+                        </form>
+                        <div class="col-sm-12">
+                            {{ values.response | safe }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+

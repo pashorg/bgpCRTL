@@ -1,0 +1,126 @@
+h1{
+    margin-top: 10px;
+}
+label{
+    margin-top: 5px;
+}
+.route-maps h2{
+    margin-top: 0px;
+}
+.route-maps h3{
+    margin-top: 0px;
+}
+#input_alert{
+    border: 2px solid red;
+    border-radius: 4px;
+}
+.labels{
+    width: 100px;
+}
+.inputs{
+    width: 200px;
+}
+.dropdown:hover > .dropdown-menu {
+    display: block;
+}
+.navbar-nav{
+    display: inline-block;
+    width:100%;
+}
+.prefix-list input{
+    width:100%;
+    margin-bottom: 5px;
+}
+.btn-top{
+    width:100%;
+    margin-bottom: 20px;
+}
+.btn-log{
+    width:100%;
+    margin-bottom: 20px;
+}
+.chart {
+    margin-bottom: 20px;
+}
+.navbar{
+    margin-bottom: 0px;
+}
+.col-log{
+    width: 19%;
+}
+.btn-pl{
+    width:100%;
+    margin: 10px 0;
+}
+.float-right{
+    float:right;
+}
+.index-container{
+    width:90%;
+}
+.detail-container{
+    width:80%;
+}
+.navbar-container{
+    width:100%;
+}
+.home-btn a{
+    color: #c62e3e;
+    font-size:18px;
+    padding:0;
+}
+.login-form{
+    width:350px;
+    margin-top: 40px;
+    padding:40px 45px;
+    border: 1px #eeeeee solid;
+    border-radius:4px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+.login-form input, img{
+    width: 100%;
+    margin:10px 0px;
+    margin-bottom: 25px;
+}
+.login-form input{
+    height: 40px;
+    margin-bottom: 0px;
+}
+.login-form input[type=submit]{
+    background-color: #c62e3e;
+    color: #ffffff;
+    border: 2px #c62e3e solid;
+    border-radius:2px;
+    transition-duration: 0.4s;
+}
+.login-form input[type=submit]:hover {
+    background-color: #FFFFFF; /* Green */
+    color: black;
+}
+.login-form input[type=submit]:click {
+    background-color: #000; /* Green */
+    color: black;
+}
+.login_error{
+    margin-top:15px;
+    color: #c62e3e;
+    text-align: center;
+    margin-bottom:0px;
+}
+.del-form{
+    float: right;
+    border: 0;
+    border-radius: 0;
+    box-shadow: 0 0 0px;
+    margin: 0;
+    width: 25%;
+    padding:0;
+}
+.del-form input{
+    margin-top: 20px;
+    margin-bottom: 10px;
+    border: 0;
+}
+.width_120 {
+    width: 120%;
+}

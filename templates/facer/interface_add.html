@@ -1,0 +1,114 @@
+{% extends "facer/base.html" %}
+
+{% block title%}Добавить интерфейс хоста{% endblock %}
+
+{% block css_load %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'facer/style.css' %}" />
+{% endblock %}
+
+{% block hosts_menu %}
+    {% for machine in machine_list %}
+        <li><a href="{% url 'facer:detail' machine.id %}">{{ machine.ip_address }}</a></li>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1>Интерфейсы на {{ this_machine.ip_address }}</h1>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="col-sm-2">
+                    Интерфейс
+                </div>
+                <div class="col-sm-3">
+                    Описание
+                </div>
+                <div class="col-sm-2">
+                    IP-адрес
+                </div>
+                <div class="col-sm-1">
+                    #snmp
+                </div>
+                <div class="col-sm-1">
+                    In (Mbps)
+                </div>
+                <div class="col-sm-3">
+                    Out (Mbps)
+                </div>
+            </div>
+        </div>
+        {% for int in interfaces %}
+        <div class="row">
+            <div class="col-sm-12">
+                {% if int.enable %}
+                    <form action="{% url 'facer:interface_add' this_machine.id %}" method="post">
+                        {% csrf_token %}
+                        <div class="col-sm-2">
+                            {{ int.name }}
+                        </div>
+                        <div class="col-sm-3">
+                            {{ int.description }}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ int.ip_address }}
+                        </div>
+                        <div class="col-sm-1">
+                            {{ int.snmp_number }}
+                        </div>
+                        <div class="col-sm-1">
+                            <input class="width_120" type="number" name="max_in" value="{{ int.max_in }}" disabled>
+                        </div>
+                        <div class="col-sm-1">
+                            <input class="width_120" type="number" name="max_in" value="{{ int.max_out }}" disabled>
+                        </div>
+                        <div class="col-sm-1">
+                            <input type="submit" name="submit" value="Добавить" disabled>
+                        </div>
+                        <div class="col-sm-1">
+                            <input type="submit" name="delete" value="Удалить">
+                        </div>
+                        <input type="hidden" name="id" value="{{ int.id }}">
+                    </form>
+                {% else %}
+                    <form action="{% url 'facer:interface_add' this_machine.id %}" method="post">
+                        {% csrf_token %}
+                        <div class="col-sm-2">
+                            {{ int.name }}
+                        </div>
+                        <div class="col-sm-3">
+                            {{ int.description }}
+                        </div>
+                        <div class="col-sm-2">
+                            {{ int.ip_address }}
+                        </div>
+                        <div class="col-sm-1">
+                            {{ int.snmp_number }}
+                        </div>
+                        <div class="col-sm-1">
+                            <input class="width_120" type="number" name="max_in" value="{{ int.max_in }}" min="0" max="1000000" step="any" required>
+                        </div>
+                        <div class="col-sm-1">
+                            <input class="width_120" type="number" name="max_out" value="{{ int.max_out }}" min="0" max="1000000" step="any" required>
+                        </div>
+                        <div class="col-sm-1">
+                            <input type="submit" name="submit" value="Добавить">
+                        </div>
+                        <div class="col-sm-1">
+                            <input type="submit" name="delete" value="Удалить" disabled>
+                        </div>
+                        <input type="hidden" name="id" value="{{ int.id }}">
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        <div class="col-sm-12">
+            <h4>{{ error | safe }}</h4>
+        </div>
+    </div>
+</div>
+{% endblock %}

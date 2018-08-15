@@ -1,0 +1,30 @@
+{% extends "facer/base.html" %}
+
+{% block title%}Проверка интерфейсов хостов{% endblock %}
+
+{% block hosts_menu %}
+    {% for machine in machine_list %}
+        <li><a href="{% url 'facer:detail' machine.id %}">{{ machine.ip_address }}</a></li>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <h1>Проверка интерфейсов хостов</h1>
+        {% for machine_ip, interfaces in final_response.items %}
+            {%for interface, values in interfaces.items %}
+                <div class="col-sm-4">
+                    {{ machine_ip }}
+                </div>
+                <div class="col-sm-4">
+                    {{ interface }}
+                </div>
+                <div class="col-sm-4">
+                    {{ values.status | safe }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

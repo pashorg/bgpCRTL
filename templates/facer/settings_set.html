@@ -1,0 +1,137 @@
+{% extends "facer/base.html" %}
+
+{% block title%}Настройки {{ machine.ip_address }}{% endblock %}
+
+{% block css_load %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'facer/style.css' %}" />
+{% endblock %}
+
+{% block hosts_menu %}
+    {% for machine in machine_list %}
+        <li><a href="{% url 'facer:detail' machine.id %}">{{ machine.ip_address }}</a></li>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1>Настройки {{ this_machine.ip_address }}</h1>
+        </div>
+        <div class="col-sm-4">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h2>Добавить новую:</h2>
+                </div>
+                <form action="{% url 'facer:settings_set' this_machine.id %}" method="post">
+
+                    {% csrf_token %}
+                    <div class="col-sm-6">
+                        <label>Подсеть:</label>
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="text" name="net" value="{{ net }}" placeholder="212.192.64.0" maxlength="16"
+                               pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" required>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>Маска:</label>
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="number" name="net_mask" value="{{ net_mask }}" placeholder="19"
+                               min="0" max="30" {% if error_id == 2 %} id="input_alert" {% endif %} required
+                        >
+                    </div>
+                    <div class="col-sm-6">
+                        <label>Длина префиксов:</label>
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="number" name="max_prefix" value="{{ max_prefix }}" placeholder="22"
+                               min="0" max="24" {% if error_id == 2 %} id="input_alert" {% endif %} required
+                        >
+                    </div>
+                    <div class="col-sm-6">
+                        <label>Макс. препенд:</label>
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="number" name="max_prepend" value="{{ max_prepend }}" placeholder="5"
+                               min="0" max="10" required
+                        >
+                    </div>
+                    <div class="col-sm-6">
+                        <label>Hexthop:</label>
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="text" name="nexthop" value="{{ nexthop }}" placeholder="212.192.80.57"
+                               maxlength="16" pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$" required>
+                    </div>
+                    <div class="col-sm-12">
+                        <input type="submit" name="submit" value="Добавить">
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-sm-1"></div>
+        <div class="col-sm-7">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h2>Существующие:</h2>
+                </div>
+                <div class="col-sm-2">
+                    <label>Подсеть</label>
+                </div>
+                <div class="col-sm-1">
+                    <label>Маска</label>
+                </div>
+                <div class="col-sm-2">
+                    <label>Префикс</label>
+                </div>
+                <div class="col-sm-2">
+                    <label>Препенд</label>
+                </div>
+                <div class="col-sm-2">
+                    <label>Nexthop</label>
+                </div>
+                <div class="col-sm-2">
+                    <label>Sequence</label>
+                </div>
+                <div class="col-sm-1">
+                    <label>Действие</label>
+                </div>
+                {% for settings in settings_list %}
+                    <form action="{% url 'facer:settings_set' this_machine.id %}" method="post">
+                        {% csrf_token %}
+                        <div class="col-sm-2">
+                            <label>{{ settings.net }}</label>
+                        </div>
+                        <div class="col-sm-1">
+                            <label>/{{ settings.net_mask }}</label>
+                        </div>
+                        <div class="col-sm-2">
+                            <label>/{{ settings.max_prefix }}</label>
+                        </div>
+                        <div class="col-sm-2">
+                            <label>{{ settings.max_prepend }}</label>
+                        </div>
+                        <div class="col-sm-2">
+                            <label>{{ settings.nexthop }}</label>
+                        </div>
+                        <div class="col-sm-2">
+                            <label>{{ settings.quagga_seq }}</label>
+                        </div>
+                        <div class="col-sm-1">
+                            <input type="submit" name="delete" value="Удалить"
+                                   onclick="confirm('Вы точно хотите удалить настройки {{ settings.net }}/
+                                   {{ settings.net_mask }}?')">
+                        </div>
+                        <input type="hidden" name="id" value="{{ settings.id }}">
+                    </form>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-sm-12">
+            <h4>{% if error %}<strong>{{ error|safe }}</strong>{% endif %}</h4>
+        </div>
+    </div>
+</div>
+{% endblock %}

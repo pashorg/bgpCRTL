@@ -1,0 +1,60 @@
+{% extends "facer/base.html" %}
+
+{% block title%}Добавить Route-Map{% endblock %}
+
+{% block css_load %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'facer/style.css' %}" />
+{% endblock %}
+
+{% block hosts_menu %}
+    {% for machine in machine_list %}
+        <li><a href="{% url 'facer:detail' machine.id %}">{{ machine.ip_address }}</a></li>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h1>Добавить Route-Map</h1>
+                </div>
+                <div class="col-sm-6">
+                    <h3>Уже существуют:</h3>
+                </div>
+                <div class="col-sm-6">
+                    <h3>Добавить новый:</h3>
+                </div>
+                <div class="col-sm-6">
+                    {% for route_map in route_map_list %}
+                    <form action="{% url 'facer:route_map_add' this_machine.id %}" method="post">
+                        <div class="row">
+                            {% csrf_token %}
+                            <div class="col-sm-6">
+                                {{ route_map.name }}
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="submit" name="delete" value="Удалить"/>
+                            </div>
+                            <input type="hidden" name="id" value="{{ route_map.id }}">
+                        </div>
+                    </form>
+                    {% endfor %}
+                </div>
+                <div class="col-sm-6">
+                    <form action="{% url 'facer:route_map_add' this_machine.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="text" name="name" value="{{ name }}" placeholder="Route-Map Name" maxlength="32"
+                               {% if error_id == 2 %} id="input_alert" {% endif %} required
+                        ><br>
+                        <input type="submit" name="submit" value="Добавить"/>
+                    </form>
+                </div>
+                <div class="col-sm-12">
+                    <h4>{% if error %}<strong>{{ error | safe }}</strong>{% endif %}</h4>
+                </div>
+            </div>
+        </div>
+
+{% endblock %}

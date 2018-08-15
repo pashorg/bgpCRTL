@@ -1,0 +1,51 @@
+{% extends "facer/base.html" %}
+
+{% block title%}Получаем статистику{% endblock %}
+
+{% block hosts_menu %}
+    {% for machine in machine_list %}
+        <li><a href="{% url 'facer:detail' machine.id %}">{{ machine.ip_address }}</a></li>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1>Получаем статистику</h1>
+        </div>
+        <div class="col-sm-2">
+            IP address
+        </div>
+        <div class="col-sm-3">
+            Интерфейс
+        </div>
+        <div class="col-sm-2">
+            Входящий счетчик
+        </div>
+        <div class="col-sm-2">
+            Исходящий счетчик
+        </div>
+        <div class="col-sm-3">
+            Статус опроса
+        </div>
+        {% for numb, values in response.items %}
+            <div class="col-sm-2">
+                {{ values.ip }}
+            </div>
+            <div class="col-sm-3">
+                {{ values.interface }}
+            </div>
+            <div class="col-sm-2">
+                {{ values.counter_in }}
+            </div>
+            <div class="col-sm-2">
+                {{ values.counter_out }}
+            </div>
+            <div class="col-sm-3">
+                {{ values.status }}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

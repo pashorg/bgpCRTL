@@ -1,0 +1,42 @@
+{% extends "facer/base.html" %}
+
+{% block meta %}
+    <meta http-equiv="refresh" content="300" >
+{% endblock %}
+
+{% block title%}
+    {{ machine.ip_address }}
+{% endblock %}
+
+{% block css_load %}
+{% load static %}
+    <script type="text/javascript" src="{% static 'fusioncharts/fusioncharts.js' %}"></script>
+    <script type="text/javascript" src="{% static 'fusioncharts/themes/fusioncharts.theme.fint.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'facer/style.css' %}" />
+{% endblock %}
+
+{% block hosts_menu %}
+    {% for machine in machine_list %}
+        <li><a href="{% url 'facer:detail' machine.id %}">{{ machine.ip_address }}</a></li>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    <div class="container index-container">
+        <div class="row">
+            {% for machine, values in data.items %}
+            <div class="col-sm-12">
+                <div class="col-sm-12">
+                    <h1><a href="{% url 'facer:detail' values.id %}"> {{values.ip_address}}</a> - {{ values.description }}</h1>
+                </div>
+            </div>
+            <div class="col-sm-12">
+            {% for int, chart in values.interfaces.items %}
+                <div class="col-sm-6 chart" id={{ int }}>{{ chart|safe }}</div>
+            {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+

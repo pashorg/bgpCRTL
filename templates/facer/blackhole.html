@@ -1,0 +1,48 @@
+{% extends "facer/base.html" %}
+
+{% block title%}Добавить хост{% endblock %}
+
+{% block hosts_menu %}
+    {% for machine in machine_list %}
+        <li><a href="{% url 'facer:detail' machine.id %}">{{ machine.ip_address }}</a></li>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1>Black Hole:</h1>
+            {% if error %}<h4>Error: {{ error }}</h4>{% endif %}
+        </div>
+        <form action="{% url 'facer:blackhole' %}" method="post">
+            {% csrf_token %}
+            <div class="col-sm-12">
+                <input type="text" name="ip_addr" value="{{ ip_address }}" placeholder="10.13.1.1" maxlength="16"
+                           pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$"
+                           {% if error_id == 1 or error_id == 2 %} id="input_alert" {% endif %}>
+                <input type="submit" name="submit" value="Добавить">
+            </div>
+        </form>
+        {% for blackhole in blackhole_list %}
+        <form action="{% url 'facer:blackhole' %}" method="post">
+            {% csrf_token %}
+            <div class="col-sm-12">
+                <input type="text" name="ip_addr" value="{{ blackhole.ip_address }}" maxlength="16"
+                           pattern="((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}$"
+                           {% if error_id == 1 or error_id == 2 %} id="input_alert" {% endif %}>
+                <input type="submit" name="update" value="Обновить">
+                <input type="submit" name="delete" value="Удалить">
+            </div>
+            <input type="hidden" name="blackhole_id" value="{{ blackhole.id }}">
+        </form>
+        {% endfor %}
+        <div class="col-sm-12">
+            {{ response | safe }}
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

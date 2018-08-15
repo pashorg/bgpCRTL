@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% block meta %}{% endblock %}
+    <title>
+        {% block title %}{% endblock %}
+    </title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-confirmation2/dist/bootstrap-confirmation.min.js"></script>
+
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'facer/style.css' %}" />
+    <link rel="icon" href="{% static 'facer/router1.jpg' %}">
+    {% block css_load %}{% endblock %}
+
+</head>
+<body>
+    <header>
+        <div class="container navbar-container">
+            <nav id="menu" class="navbar">
+                <div class="navbar-collapse navbar-ex1-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="home-btn"><a href="{% url 'facer:index' %}" role="button">&#9883 Интернет-центр ПГНИУ</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                               aria-haspopup="true" aria-expanded="false">Хосты<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                {% block hosts_menu %}{% endblock %}
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="{% url 'facer:machine_add' %}">Добавить Хост</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'facer:interfaces_check' %}">Обновить интерфейсы</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'facer:interfaces_stats' %}">Собрать статистику</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'facer:blackhole' %}">Black Hole</a>
+                        </li>
+                        <li class="navbar-right">
+                            <a href="{% url 'facer:logout' %}">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
+    {% block content %}{% endblock %}
+</body>
+</html>
